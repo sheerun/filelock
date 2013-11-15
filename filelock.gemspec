@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Filelock::VERSION
   spec.authors       = ["Adam Stankiewicz"]
   spec.email         = ["sheerun@sher.pl"]
-  spec.description   = %q{Solid implementation of inter-process locking using flock system commnad}
-  spec.summary       = %q{Solid implementation of inter-process locking}
-  spec.homepage      = ""
+  spec.description   = %q{Heavily tested yet simple filelocking solution using flock}
+  spec.summary       = %q{Heavily tested yet simple filelocking solution using flock}
+  spec.homepage      = "http://github.com/sheerun/filelock"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

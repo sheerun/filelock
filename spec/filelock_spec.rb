@@ -4,6 +4,11 @@ require 'timeout'
 
 describe Filelock do
 
+  # Helper because File.write won't work for older Ruby
+  def write(filename, contents)
+    File.open(filename, 'w') { |f| f.write(contents) }
+  end
+
   def parallel(n = 2, templock = nil, &block)
     Timeout::timeout(5) do
       templock ||= Tempfile.new(['sample', '.lock'])
@@ -127,12 +132,12 @@ describe Filelock do
   end
 
   it 'should work for multiple processes' do
-    File.write('/tmp/number.txt', '0')
+    write('/tmp/number.txt', '0')
 
     parallel_forks(6) do
       number = File.read('/tmp/number.txt').to_i
       sleep 0.3
-      File.write('/tmp/number.txt', (number + 7).to_s)
+      write('/tmp/number.txt', (number + 7).to_s)
     end
 
     number = File.read('/tmp/number.txt').to_i
@@ -141,12 +146,12 @@ describe Filelock do
   end
 
   it 'should handle heavy forking' do
-    File.write('/tmp/number.txt', '0')
+    write('/tmp/number.txt', '0')
 
     parallel_forks(100) do
       number = File.read('/tmp/number.txt').to_i
       sleep 0.001
-      File.write('/tmp/number.txt', (number + 1).to_s)
+      write('/tmp/number.txt', (number + 1).to_s)
     end
 
     number = File.read('/tmp/number.txt').to_i

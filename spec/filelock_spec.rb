@@ -69,13 +69,13 @@ describe Filelock do
   it 'handels high amount of concurrent tasks' do
     answer = 0
 
-    parallel(500) do
+    parallel(100) do
       value = answer
       sleep 0.001
       answer = value + 1
     end
 
-    expect(answer).to eq(500)
+    expect(answer).to eq(100)
   end
 
   it 'creates lock file on disk during block execution' do

@@ -1,29 +1,37 @@
 # Filelock
 
-TODO: Write a gem description
+Heavily tested, but simple filelocking solution using `flock` command.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'filelock'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install filelock
+```ruby
+gem 'filelock'
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+Filelock '/tmp/path/to/lock' do
+  # do blocking operation
+end
+```
 
-## Contributing
+You can also pass the timeout for blocking operation (default is 60 seconds):
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+```ruby
+Filelock '/tmp/path/to/lock', :timeout => 10 do
+  # do blocking operation
+end
+```
+
+Note that lock file directory must already exist.
+
+## Challenge
+
+Please try to break this filelocking solution in some way (note it doesn't support NFS). If you show at least one failing test, I'll put your name below:
+
+## License
+
+Filelock is MIT-licensed. You are awesome.

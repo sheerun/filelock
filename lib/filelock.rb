@@ -1,7 +1,7 @@
 require 'filelock/version'
 require 'timeout'
 
-if VERSION <= "1.8.7"
+if RUBY_VERSION <= "1.8.7"
   require 'tempfile'
 
   def Filelock(lockname, options = {}, &block)

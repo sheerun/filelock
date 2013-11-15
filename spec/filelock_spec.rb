@@ -6,7 +6,7 @@ describe Filelock do
 
   # Helper because File.write won't work for older Ruby
   def write(filename, contents)
-    File.open(filename, 'w') { |f| f.write(contents) }
+    File.open(filename.to_s, 'w') { |f| f.write(contents) }
   end
 
   def parallel(n = 2, templock = nil, &block)
@@ -131,33 +131,33 @@ describe Filelock do
     end
   end
 
-  it 'should work for multiple processes' do
-    write('/tmp/number.txt', '0')
+  # it 'should work for multiple processes' do
+  #   write('/tmp/number.txt', '0')
 
-    parallel_forks(6) do
-      number = File.read('/tmp/number.txt').to_i
-      sleep 0.3
-      write('/tmp/number.txt', (number + 7).to_s)
-    end
+  #   parallel_forks(6) do
+  #     number = File.read('/tmp/number.txt').to_i
+  #     sleep 0.3
+  #     write('/tmp/number.txt', (number + 7).to_s)
+  #   end
 
-    number = File.read('/tmp/number.txt').to_i
+  #   number = File.read('/tmp/number.txt').to_i
 
-    expect(number).to eq(42)
-  end
+  #   expect(number).to eq(42)
+  # end
 
-  it 'should handle heavy forking' do
-    write('/tmp/number.txt', '0')
+  # it 'should handle heavy forking' do
+  #   write('/tmp/number.txt', '0')
 
-    parallel_forks(100) do
-      number = File.read('/tmp/number.txt').to_i
-      sleep 0.001
-      write('/tmp/number.txt', (number + 1).to_s)
-    end
+  #   parallel_forks(100) do
+  #     number = File.read('/tmp/number.txt').to_i
+  #     sleep 0.001
+  #     write('/tmp/number.txt', (number + 1).to_s)
+  #   end
 
-    number = File.read('/tmp/number.txt').to_i
+  #   number = File.read('/tmp/number.txt').to_i
 
-    expect(number).to eq(100)
-  end
+  #   expect(number).to eq(100)
+  # end
 
   it 'should unblock files when killing processes' do
     Dir.mktmpdir do |dir|
@@ -202,5 +202,26 @@ describe Filelock do
 
       expect(answer).to eq(42)
     end
+  end
+
+  # It failed for 1.8.7  (cannot convert to String)
+  it 'works for Tempfile' do
+    answer = 0
+
+    Filelock Tempfile.new(['sample', '.lock']) do
+      answer += 42
+    end
+
+    expect(answer).to eq(42)
+  end
+
+  # If implemented the wrong way lock is created elsewhere
+  it 'creates file with exact path provided' do
+    filename = "/tmp/awesome-lock-#{rand}.lock"
+
+    Filelock filename do
+    end
+
+    expect(File.exist?(filename)).to eq(true)
   end
 end

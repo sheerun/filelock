@@ -35,6 +35,8 @@ No. You can use more complex [lockfile](https://github.com/ahoward/lockfile) gem
 
 Because even such short code can have issues in future. File locking is very fragile operation. You may expect new releases of this gem fixing discovered bogus behavior (or introducing awesome features).
 
+You are encouraged to use it if you develop gem that uses flock command, and care about running it on different ruby versions and platforms. Each has its own quirks with regard to flock command.
+
 *How it's different from [lockfile](https://github.com/ahoward/lockfile) gem?*
 
 Lockfile is filelocking solution handling NFS filesystems, based on homemade locking solution. Filelock uses [flock](http://linux.die.net/man/2/flock) UNIX command to handle filelocking on very low level. Also lockfile allows you to specify retry timeout. In case of Ruby's flock command this is hard-cored to 0.1 seconds.

@@ -1,6 +1,11 @@
-# Filelock
+# Filelock [![Build Status][travis-img-url]][travis-url]
+
+[travis-img-url]: https://travis-ci.org/sheerun/filelock.png
+[travis-url]: https://travis-ci-org/sheerun/filelock
 
 Heavily tested, but simple filelocking solution using [flock](http://linux.die.net/man/2/flock) command. It guarantees unlocking of files.
+
+It works for sure on MRI 1.8.7-2.0.0, jruby in both 1.8 and 1.9 mode, and Rubinius.
 
 ## Usage
 

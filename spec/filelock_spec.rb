@@ -185,4 +185,17 @@ describe Filelock do
       end
     end
   end
+
+  it 'should handle Pathname as well as string path' do
+    Dir.mktmpdir do |dir|
+      lockpath = Pathname.new(File.join(dir, 'sample.lock'))
+
+      answer = 0
+      Filelock lockpath do
+        answer += 42
+      end
+
+      expect(answer).to eq(42)
+    end
+  end
 end

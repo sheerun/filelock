@@ -1,6 +1,6 @@
 # Filelock
 
-Heavily tested, but simple filelocking solution using [flock](http://linux.die.net/man/2/flock) command.
+Heavily tested, but simple filelocking solution using [flock](http://linux.die.net/man/2/flock) command. It guarantees unlocking of files.
 
 ## Usage
 
@@ -28,7 +28,7 @@ No. You can use more complex [lockfile](https://github.com/ahoward/lockfile) gem
 
 *The code is so short. Why shouln't I just copy-paste it?*
 
-Because even such short code can have issues in future. Although it's heavily tested, you may expect new releases of this gem fixing such bogus behavior (or introducing awesome features).
+Because even such short code can have issues in future. File locking is very fragile operation. You may expect new releases of this gem fixing discovered bogus behavior (or introducing awesome features).
 
 *How it's different from [lockfile](https://github.com/ahoward/lockfile) gem?*
 

@@ -16,22 +16,42 @@ describe Filelock do
     end
   end
 
-  it 'runs simple ruby block as usual' do
-    answer = 0
+  def parallel_forks(n = 2, templock = nil, &block)
+    Timeout::timeout(5) do
+      templock ||= Tempfile.new(['sample', '.lock'])
 
-    Filelock 'code.lock' do
-      answer += 42
+      (1..n).map do
+        fork {
+          Filelock(templock, &block)
+        }
+      end.map do |pid|
+        Process.waitpid(pid)
+      end
     end
+  end
 
-    expect(answer).to eq(42)
+  it 'runs simple ruby block as usual' do
+    Dir.mktmpdir do |dir|
+      lockpath = File.join(dir, 'sample.lock')
+      answer = 0
+
+      Filelock lockpath do
+        answer += 42
+      end
+
+      expect(answer).to eq(42)
+    end
   end
 
   it 'returns value returned by block' do
-    answer = Filelock 'code.lock' do
-      42
-    end
+    Dir.mktmpdir do |dir|
+      lockpath = File.join(dir, 'sample.lock')
+      answer = Filelock lockpath do
+        42
+      end
 
-    expect(answer).to eq(42)
+      expect(answer).to eq(42)
+    end
   end
 
   it 'runs in parallel without race condition' do
@@ -103,6 +123,66 @@ describe Filelock do
       end
 
       expect(answer).to eq(42)
+    end
+  end
+
+  it 'should work for multiple processes' do
+    File.write('/tmp/number.txt', '0')
+
+    parallel_forks(6) do
+      number = File.read('/tmp/number.txt').to_i
+      sleep 0.3
+      File.write('/tmp/number.txt', (number + 7).to_s)
+    end
+
+    number = File.read('/tmp/number.txt').to_i
+
+    expect(number).to eq(42)
+  end
+
+  it 'should handle heavy forking' do
+    File.write('/tmp/number.txt', '0')
+
+    parallel_forks(100) do
+      number = File.read('/tmp/number.txt').to_i
+      sleep 0.001
+      File.write('/tmp/number.txt', (number + 1).to_s)
+    end
+
+    number = File.read('/tmp/number.txt').to_i
+
+    expect(number).to eq(100)
+  end
+
+  it 'should unblock files when killing processes' do
+    Dir.mktmpdir do |dir|
+      lockpath = File.join(dir, 'sample.lock')
+
+      Dir.mktmpdir do |dir|
+        pid = fork {
+          Filelock lockpath do
+            sleep 10
+          end
+        }
+
+        sleep 0.5
+
+        answer = 0
+
+        thread = Thread.new {
+          Filelock lockpath do
+            answer += 42
+          end
+        }
+
+        sleep 0.5
+
+        expect(answer).to eq(0)
+        Process.kill(9, pid)
+        thread.join
+
+        expect(answer).to eq(42)
+      end
     end
   end
 end

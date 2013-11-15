@@ -1,7 +1,14 @@
 require 'filelock/version'
 require 'timeout'
 
-if RUBY_VERSION <= "1.8.7"
+if RUBY_PLATFORM == "java"
+  def Filelock(lockname, options = {}, &block)
+    File.open(lockname, File::RDWR|File::CREAT, 0644) do |file|
+      Thread.pass until file.flock(File::LOCK_EX)
+      Timeout::timeout(options.fetch(:timeout, 60)) { yield }
+    end
+  end
+elsif RUBY_VERSION <= "1.8.7"
   require 'tempfile'
 
   def Filelock(lockname, options = {}, &block)

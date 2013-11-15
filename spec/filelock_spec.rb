@@ -131,77 +131,82 @@ describe Filelock do
     end
   end
 
-  # it 'should work for multiple processes' do
-  #   write('/tmp/number.txt', '0')
+  # Java doesn't support forking
+  if RUBY_PLATFORM != 'java'
+    
+    it 'should work for multiple processes' do
+      write('/tmp/number.txt', '0')
 
-  #   parallel_forks(6) do
-  #     number = File.read('/tmp/number.txt').to_i
-  #     sleep 0.3
-  #     write('/tmp/number.txt', (number + 7).to_s)
-  #   end
+      parallel_forks(6) do
+        number = File.read('/tmp/number.txt').to_i
+        sleep 0.3
+        write('/tmp/number.txt', (number + 7).to_s)
+      end
 
-  #   number = File.read('/tmp/number.txt').to_i
+      number = File.read('/tmp/number.txt').to_i
 
-  #   expect(number).to eq(42)
-  # end
+      expect(number).to eq(42)
+    end
 
-  # it 'should handle heavy forking' do
-  #   write('/tmp/number.txt', '0')
+    it 'should handle heavy forking' do
+      write('/tmp/number.txt', '0')
 
-  #   parallel_forks(100) do
-  #     number = File.read('/tmp/number.txt').to_i
-  #     sleep 0.001
-  #     write('/tmp/number.txt', (number + 1).to_s)
-  #   end
+      parallel_forks(100) do
+        number = File.read('/tmp/number.txt').to_i
+        sleep 0.001
+        write('/tmp/number.txt', (number + 1).to_s)
+      end
 
-  #   number = File.read('/tmp/number.txt').to_i
+      number = File.read('/tmp/number.txt').to_i
 
-  #   expect(number).to eq(100)
-  # end
+      expect(number).to eq(100)
+    end
 
-  it 'should unblock files when killing processes' do
-    Dir.mktmpdir do |dir|
-      lockpath = File.join(dir, 'sample.lock')
-
+    it 'should unblock files when killing processes' do
       Dir.mktmpdir do |dir|
-        pid = fork {
-          Filelock lockpath do
-            sleep 10
-          end
-        }
+        lockpath = File.join(dir, 'sample.lock')
 
-        sleep 0.5
+        Dir.mktmpdir do |dir|
+          pid = fork {
+            Filelock lockpath do
+              sleep 10
+            end
+          }
+
+          sleep 0.5
+
+          answer = 0
+
+          thread = Thread.new {
+            Filelock lockpath do
+              answer += 42
+            end
+          }
+
+          sleep 0.5
+
+          expect(answer).to eq(0)
+          Process.kill(9, pid)
+          thread.join
+
+          expect(answer).to eq(42)
+        end
+      end
+    end
+
+    it 'should handle Pathname as well as string path' do
+      Dir.mktmpdir do |dir|
+        lockpath = Pathname.new(File.join(dir, 'sample.lock'))
 
         answer = 0
-
-        thread = Thread.new {
-          Filelock lockpath do
-            answer += 42
-          end
-        }
-
-        sleep 0.5
-
-        expect(answer).to eq(0)
-        Process.kill(9, pid)
-        thread.join
+        Filelock lockpath do
+          answer += 42
+        end
 
         expect(answer).to eq(42)
       end
     end
-  end
 
-  it 'should handle Pathname as well as string path' do
-    Dir.mktmpdir do |dir|
-      lockpath = Pathname.new(File.join(dir, 'sample.lock'))
-
-      answer = 0
-      Filelock lockpath do
-        answer += 42
-      end
-
-      expect(answer).to eq(42)
-    end
   end
 
   # It failed for 1.8.7  (cannot convert to String)

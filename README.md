@@ -7,7 +7,7 @@ Heavily tested, but simple filelocking solution using [flock](http://linux.die.n
 
 It works for sure on MRI 1.8, 1.9, 2.0, JRuby in both 1.8 and 1.9 mode, and Rubinius.
 
-You can use it with [GlusterFS](http://www.gluster.org/), but it doesn't support NFS in general.
+This gem doesn't support NFS. You can use it with [GlusterFS](http://www.gluster.org/), though.
 
 ## Usage
 

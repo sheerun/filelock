@@ -47,11 +47,9 @@ Lockfile is filelocking solution handling NFS filesystems, based on homemade loc
 
 Cleverua removes lockfile after unlocking it. Thas has been proven fatal both in my tests and in [filelocking advices from the Internet](http://world.std.com/~swmcd/steven/tech/flock.html). You could try find a way to remove lock file without breaking Filelock tests. I will be glad to accept such pull-request.
 
-## Challenge
+## Contribute
 
-Please try to break Filelock in some way (note it doesn't support NFS).
-
-If you show at least one failing test, I'll put your name below:
+Try to break Filelock in some way (note it doesn't support NFS).
 
 ## License
 

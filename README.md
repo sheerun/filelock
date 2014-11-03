@@ -1,7 +1,7 @@
 # Filelock [![Build Status][travis-img-url]][travis-url]
 
 [travis-img-url]: https://travis-ci.org/sheerun/filelock.png
-[travis-url]: https://travis-ci-org/sheerun/filelock
+[travis-url]: https://travis-ci.org/sheerun/filelock
 
 Heavily tested, but simple filelocking solution using [flock](http://linux.die.net/man/2/flock) command. It guarantees unlocking of files.
 

@@ -25,6 +25,14 @@ Filelock '/tmp/path/to/lock', :timeout => 10 do
 end
 ```
 
+You can also pass a wait timeout for grabbing the lock (default is 60 seconds):
+
+```ruby
+Filelock '/tmp/path/to/lock', :wait => 10 do
+  # do blocking operation
+end
+```
+
 Note that lock file directory must already exist, and lock file is not removed after unlock.
 
 ## FAQ

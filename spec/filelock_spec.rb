@@ -131,9 +131,53 @@ describe Filelock do
     end
   end
 
+  # Seems like a duplicate but the above test ensures support of the older versions
+  # before Filelock::ExecTimeout existed, while this test is testing the new exception
+  # class.
+  it 'raises Filelock::ExecTimeout exception after specified number of seconds' do
+    Dir.mktmpdir do |dir|
+      lockpath = File.join(dir, 'sample.lock')
+
+      answer = 42
+
+      expect {
+        Filelock lockpath, :timeout => 1 do
+          sleep 2
+          answer = 0
+        end
+      }.to raise_error(Filelock::ExecTimeout)
+
+      expect(answer).to eq(42)
+    end
+  end
+
+
   # Java doesn't support forking
   if RUBY_PLATFORM != 'java'
-    
+
+    it 'times out after lock cannot be acquired within specified number of seconds' do
+      Dir.mktmpdir do |dir|
+        lockpath = File.join(dir, 'sample.lock')
+
+        pid1 = Process.fork do
+          Filelock lockpath do
+            sleep 3
+          end
+        end
+
+        # Give the forked process some time to spin up
+        sleep 1
+
+        expect {
+          Filelock lockpath, :wait => 1 do
+            answer = 0
+          end
+        }.to raise_error(Filelock::WaitTimeout)
+
+        Process.wait
+      end
+    end
+
     it 'should work for multiple processes' do
       write('/tmp/number.txt', '0')
 

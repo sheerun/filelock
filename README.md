@@ -9,13 +9,15 @@ It works for sure on MRI 1.8, 1.9, 2.0, JRuby in both 1.8 and 1.9 mode, and Rubi
 
 This gem doesn't support NFS. You can use it with [GlusterFS](http://www.gluster.org/), though.
 
-## Usage
+## Basic Usage
 
 ```ruby
 Filelock '/tmp/path/to/lock' do
   # do blocking operation
 end
 ```
+
+### Operation Timeout
 
 You can also pass the timeout for blocking operation (default is 60 seconds):
 
@@ -25,13 +27,19 @@ Filelock '/tmp/path/to/lock', :timeout => 10 do
 end
 ```
 
-You can also pass a wait timeout for grabbing the lock (default is 60 seconds):
+You can detect timeout by catching `Filelock::ExecTimeout`.
+
+### Lock Acquiring Timeout
+
+You can also pass a wait timeout for grabbing the lock (default is 1 day):
 
 ```ruby
-Filelock '/tmp/path/to/lock', :wait => 10 do
+Filelock '/tmp/path/to/lock', :wait => 3600 do
   # do blocking operation
 end
 ```
+
+You can detect this kind of timeout by catching `Filelock::WaitTimeout`.
 
 Note that lock file directory must already exist, and lock file is not removed after unlock.
 

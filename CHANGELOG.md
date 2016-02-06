@@ -1,0 +1,16 @@
+# 1.1.0
+
+- Add `:wait` flag for lock-acquiting timeout
+- Add two new timeout exteptions: `FileLock::ExecTimeout` and `FileLock::WaitTimeout`
+
+# 1.0.3
+
+Fix for rubinius
+
+# 1.0.2
+
+Make filelock working for jruby
+
+# 1.0.1
+
+Test and fix more ruby versions

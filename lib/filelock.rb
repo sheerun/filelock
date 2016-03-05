@@ -1,7 +1,7 @@
+require 'timeout'
 require 'filelock/version'
 require 'filelock/exec_timeout'
 require 'filelock/wait_timeout'
-require 'timeout'
 require 'tempfile'
 
 if RUBY_PLATFORM == "java"

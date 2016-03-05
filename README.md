@@ -43,6 +43,16 @@ You can detect this kind of timeout by catching `Filelock::WaitTimeout`.
 
 Note that lock file directory must already exist, and lock file is not removed after unlock.
 
+### Getting handle to locked file
+
+
+```ruby
+Filelock '/tmp/path/to/lock' do |file|
+  file.truncate
+  file.write Process.pid
+end
+```
+
 ## FAQ
 
 *Does it support NFS?*

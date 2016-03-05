@@ -1,3 +1,8 @@
+# 1.1.1
+
+- fix: Load timeout module before using it
+- pass locked file to block provided to Filelock
+
 # 1.1.0
 
 - Add `:wait` flag for lock-acquiting timeout

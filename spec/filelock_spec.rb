@@ -59,6 +59,17 @@ describe Filelock do
     end
   end
 
+  it 'passes handle to block' do
+    Dir.mktmpdir do |dir|
+      lockpath = File.join(dir, 'sample.lock')
+      Filelock lockpath do |lock|
+        lock.write '42'
+      end
+
+      expect(File.read(File.join(dir,'sample.lock'))).to eq('42')
+    end
+  end
+
   it 'runs in parallel without race condition' do
     answer = 0
 

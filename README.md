@@ -31,7 +31,7 @@ You can detect timeout by catching `Filelock::ExecTimeout`.
 
 ### Lock Acquiring Timeout
 
-You can also pass a wait timeout for grabbing the lock (default is 1 day):
+You can also pass a non-zero wait timeout for grabbing the lock (default is 1 day):
 
 ```ruby
 Filelock '/tmp/path/to/lock', :wait => 3600 do
@@ -39,7 +39,7 @@ Filelock '/tmp/path/to/lock', :wait => 3600 do
 end
 ```
 
-You can detect this kind of timeout by catching `Filelock::WaitTimeout`.
+You can detect this kind of timeout by catching `Filelock::WaitTimeout`.  Note that a wait timeout of 0 will block until the lock can be acquired instead of raising `Filelock::WaitTimeout`.
 
 Note that lock file directory must already exist, and lock file is not removed after unlock.
 

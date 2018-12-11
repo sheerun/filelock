@@ -73,6 +73,10 @@ Lockfile is filelocking solution handling NFS filesystems, based on homemade loc
 
 Cleverua removes lockfile after unlocking it. Thas has been proven fatal both in my tests and in [filelocking advices from the Internet](http://world.std.com/~swmcd/steven/tech/flock.html). You could try find a way to remove lock file without breaking Filelock tests. I will be glad to accept such pull-request.
 
+*What happens if my ruby process gets killed while holding a lock? Can new processes acquire this lock?*
+
+Yes
+
 ## Contribute
 
 Try to break Filelock in some way (note it doesn't support NFS).

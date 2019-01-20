@@ -1,6 +1,7 @@
 require 'filelock'
 require 'tempfile'
 require 'timeout'
+require 'pathname'
 
 describe Filelock do
 

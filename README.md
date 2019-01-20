@@ -53,6 +53,24 @@ Filelock '/tmp/path/to/lock' do |file|
 end
 ```
 
+### Passing custom lock options
+
+```ruby
+# Non-blocking lock mode
+Filelock '/tmp/path/to/lock', lock_options: File::LOCK_EX|File::LOCK_NB do
+  # Do stuff.
+end
+```
+
+### Passing custom file modes
+
+```ruby
+# Open filelock in append mode
+Filelock '/tmp/path/to/lock', modes: 'a' do |file|
+  # Do stuff.
+end
+```
+
 ## FAQ
 
 *Does it support NFS?*

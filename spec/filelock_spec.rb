@@ -290,7 +290,7 @@ describe Filelock do
   it 'handles file in append mode' do
     filename = "/tmp/awesome-lock-#{rand}.lock"
 
-    Filelock filename, modes: "a" do |file|
+    Filelock filename, :modes => "a" do |file|
       file.write("a")
       file.write("b")
       expect(File.exist?(filename)).to eq(true)
@@ -303,8 +303,8 @@ describe Filelock do
   it 'allows nonblocking mode' do
     filename = "/tmp/awesome-lock-#{rand}.lock"
 
-    Filelock filename, lock_options: File::LOCK_EX do
-      expect(Filelock filename, lock_options: File::LOCK_EX|File::LOCK_NB).to eq(false)
+    Filelock filename, :lock_options => File::LOCK_EX do
+      expect(Filelock filename, :lock_options => File::LOCK_EX|File::LOCK_NB).to eq(false)
     end
   end
 end

@@ -14,4 +14,4 @@ rvm:
   - "2.6"
   - jruby-19mode
   - jruby-18mode
-  - rubinius-2
+  - rubinius-3

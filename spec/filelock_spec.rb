@@ -1,4 +1,5 @@
 require 'filelock'
+require 'pathname'
 require 'tempfile'
 require 'timeout'
 
